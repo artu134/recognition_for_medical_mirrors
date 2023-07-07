@@ -1,0 +1,44 @@
+import numpy as np
+from lstm_SA_type_full_stable import LSTM_SA_Architecture
+from data_provider import ImageDataProvider  # Change this if needed
+
+# Parameters
+xsz = (256, 256)      # xsize
+ysz = (256, 256)      # ysize
+ndim = 3              # ndimension
+nfil = 64             # nfilters
+layer = 5             # nlayers
+cl = 4                # nclasses
+loss = "softmax"      # loss_function
+opt = "adam"          # optimizer
+lrate = 0.0001        # learning_rate
+bnorm = True          # bn
+reg = None            # reg
+regsc = 0.00001       # reg_scale
+imgstd = False        # image_std
+cc = True             # crop_concat
+cnfilt = False        # constant_nfilters
+nm = "LSTMfull_rgb_nat"  # name
+bs = 10               # batch_size
+seq_len = 10          # sequence_length
+model_path = './model/model.ckpt'  # Path to your trained model
+image_path = './test_image.png'    # Path to the image to predict
+
+# Load and preprocess your image
+# Depending on how your images were preprocessed during training, you might need to do some modifications here.
+image_data_provider = ImageDataProvider(image_path, size=xsz)  # Change this if needed
+image = image_data_provider.load_data()
+
+# Define NN-architecture
+lstmnet = LSTM_SA_Architecture(nfilters=int(nfil), nlayers=int(layer), ndimensions=int(ndim), nclasses=int(cl), 
+                               loss_function=str(loss), learning_rate=float(lrate), nsequences=int(seq_len), 
+                               bn=bnorm, reg=None, reg_scale=float(regsc), image_std=str(imgstd), 
+                               constant_nfilters=str(cnfilt), name=str(nm))
+
+# Load the trained model
+lstmnet.load_weights(model_path)
+
+# Make a prediction
+prediction = lstmnet.predict(np.expand_dims(image, axis=0))
+
+# Now `prediction` contains the model's prediction for your input image.

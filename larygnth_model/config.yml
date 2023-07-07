@@ -1,0 +1,5 @@
+# config.yml
+model:
+  meta_path: lstm_save/model-30000.meta
+  checkpoint_path: lstm_save/model-30000
+
